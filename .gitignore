@@ -1,0 +1,23 @@
+# Python
+backend/venv/
+backend/.env
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+frontend/.env
+frontend/dist/
+package-lock.json
+package.json
+
+
+# Chrome Extension
+extension/dist/
+extension/*.pem
+
+# OS
+.DS_Store
+
+# General
+*.env
