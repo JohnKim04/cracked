@@ -8,8 +8,6 @@ __pycache__/
 node_modules/
 frontend/.env
 frontend/dist/
-package-lock.json
-package.json
 
 
 # Chrome Extension
