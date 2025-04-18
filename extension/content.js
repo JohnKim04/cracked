@@ -38,6 +38,17 @@ function createCrackedSidebar() {
         <div id="cracked-feedback" style="
             margin-top: 24px;"></div>
     `;
+
+    const bodyStyle = window.getComputedStyle(document.body);
+    const originalPaddingRight = parseFloat(bodyStyle.paddingRight) || 0;
+    const originalOverflowX = bodyStyle.overflowX;
+
+    document.body.style.paddingRight = `${originalPaddingRight + 320}px`;
+    document.body.style.overflowX = 'hidden';
+
+    // Save original values as data attributes
+    document.body.dataset.originalPaddingRight = originalPaddingRight;
+    document.body.dataset.originalOverflowX = originalOverflowX;
     document.body.appendChild(sidebar);
     // Enable/disable button logic after creation
     const startBtn = document.getElementById("start-interview-btn");
@@ -54,6 +65,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "toggle_sidebar") {
         const sidebar = document.getElementById("cracked-sidebar");
         if (sidebar) {
+            // Restore original body styles
+            const originalPadding = parseFloat(document.body.dataset.originalPaddingRight) || 0;
+            const originalOverflow = document.body.dataset.originalOverflowX || 'visible';
+
+            document.body.style.paddingRight = `${originalPadding}px`;
+            document.body.style.overflowX = originalOverflow;
+
+            // Cleanup data attributes
+            delete document.body.dataset.originalPaddingRight;
+            delete document.body.dataset.originalOverflowX;
+
             sidebar.remove();
         } else {
             createCrackedSidebar();
