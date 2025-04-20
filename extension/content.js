@@ -1,6 +1,8 @@
 // Track the current problem title
 let currentProblemTitle = null;
 let pollInterval = null;
+let userClosedSidebar = false;
+let currentProblemUrl = null;
 
 function createCrackedSidebar() {
     if (document.getElementById("cracked-sidebar")) {
@@ -129,11 +131,28 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 function onUrlChange() {
-    // If sidebar exists, update the problem info
-    if (document.getElementById("cracked-sidebar")) {
+    const url = location.href;
+    const isProblemPage = url.includes("leetcode.com/problems/");
+
+    if (isProblemPage) {
+        if (currentProblemUrl !== url) {
+            userClosedSidebar = false;
+            currentProblemUrl = url;
+            if (!document.getElementById("cracked-sidebar")) {
+                createCrackedSidebar();
+            }
+        }
         updateProblemInfo();
+    } else {
+        const sidebar = document.getElementById("cracked-sidebar");
+        if (sidebar) {
+            sidebar.remove();
+            clearInterval(pollInterval);
+            pollInterval = null;
+        }
+        currentProblemTitle = null;
+        userClosedSidebar = false;
     }
-    
 }
 
 // Listen for messages from background.js to toggle the sidebar
@@ -141,6 +160,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "toggle_sidebar") {
         const sidebar = document.getElementById("cracked-sidebar");
         if (sidebar) {
+            userClosedSidebar = true;
             if (pollInterval) {
                 clearInterval(pollInterval);
                 pollInterval = null;
@@ -158,6 +178,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             sidebar.remove();
         } else {
+            userClosedSidebar = false;
             createCrackedSidebar();
         }
         sendResponse({ toggled: true, problemTitle: currentProblemTitle });
@@ -168,10 +189,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-// Wait for DOMContentLoaded before initializing sidebar or getting problem title
 function initializeCrackedSidebar() {
     if (window.location.href.includes("leetcode.com/problems/")) {
         currentProblemTitle = getProblemTitle();
+        currentProblemUrl = window.location.href;
+
+        if (!userClosedSidebar && !document.getElementById("cracked-sidebar")) {
+            createCrackedSidebar();
+        }
     }
 }
 
