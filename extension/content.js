@@ -27,7 +27,20 @@ function createCrackedSidebar() {
         padding: 16px;
     `;
     sidebar.innerHTML = `
-        <h2 style="margin: 0 0 12px 0">Cracked</h2>
+        <div style="position: relative; display: flex; align-items: center; justify-content: space-between;">
+            <h2 style="margin: 0 0 12px 0">Cracked</h2>
+            <button id="open-webapp-btn" style="
+                padding: 5px 10px;
+                font-size: 14px;
+                background-color: #0070f3;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                color: #fff;
+            ">
+            Dashboard
+            </button>
+        </div>
         <p style="font-size: 14px;">Practice mock interviews with AI while solving LeetCode problems.</p>
         <div id="current-problem" style="margin: 10px 0; font-size: 14px; color: #ccc;"></div>
         <button id="start-interview-btn" style="
@@ -58,8 +71,12 @@ function createCrackedSidebar() {
     document.body.dataset.originalOverflowX = originalOverflowX;
     document.body.appendChild(sidebar);
 
+    document.getElementById("open-webapp-btn").addEventListener("click", () => {
+        window.open("http://localhost:5173/dashboard", "_blank");
+    });
+
     pollInterval = setInterval(updateProblemInfo, 2000);
-    
+
     // Update the button state and problem info
     updateProblemInfo();
 }
@@ -68,17 +85,17 @@ function getProblemTitle() {
     try {
         const script = document.getElementById('__NEXT_DATA__');
         if (!script) return null;
-        
+
         const jsonData = JSON.parse(script.textContent);
         const question = jsonData.props?.pageProps?.question;
-        
+
         if (question?.questionFrontendId && question?.title) {
             return `${question.questionFrontendId}. ${question.title}`;
         }
     } catch (e) {
         console.error('Error parsing problem data:', e);
     }
-    
+
     // Fallback to DOM scraping if Next.js data not available
     const links = document.querySelectorAll('a[href*="/problems/"]');
     for (const link of links) {
@@ -87,14 +104,14 @@ function getProblemTitle() {
             return text;
         }
     }
-    
+
     return null;
 }
 
 function updateProblemInfo() {
     const startBtn = document.getElementById("start-interview-btn");
     const problemInfoDiv = document.getElementById("current-problem");
-    
+
     if (!startBtn || !problemInfoDiv) return;
 
     const isProblemPage = window.location.href.includes("leetcode.com/problems/");
@@ -108,14 +125,14 @@ function updateProblemInfo() {
         startBtn.style.cursor = "pointer";
         startBtn.innerText = "Start Interview";
     } else {
-        problemInfoDiv.textContent = isProblemPage 
-            ? "Detecting problem..." 
+        problemInfoDiv.textContent = isProblemPage
+            ? "Detecting problem..."
             : "Navigate to a problem to begin";
         startBtn.disabled = true;
         startBtn.style.backgroundColor = "#999";
         startBtn.style.cursor = "not-allowed";
-        startBtn.innerText = isProblemPage 
-            ? "Loading problem..." 
+        startBtn.innerText = isProblemPage
+            ? "Loading problem..."
             : "Go to a problem page";
     }
 }
@@ -128,7 +145,7 @@ new MutationObserver(() => {
         lastUrl = url;
         onUrlChange();
     }
-}).observe(document, {subtree: true, childList: true});
+}).observe(document, { subtree: true, childList: true });
 
 function onUrlChange() {
     const url = location.href;
@@ -183,7 +200,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         sendResponse({ toggled: true, problemTitle: currentProblemTitle });
     }
-    
+
     if (request.action === "get_problem_title") {
         sendResponse({ problemTitle: currentProblemTitle });
     }
