@@ -99,9 +99,10 @@ export const columns: ColumnDef<MockInterview>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(interview.id)}>
-              Copy Interview ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.id)}>
+              View Details
             </DropdownMenuItem>
+            <DropdownMenuItem>Export Solution</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
