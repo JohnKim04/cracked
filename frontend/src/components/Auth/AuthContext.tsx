@@ -1,15 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import supabase from '../../lib/supabaseClient';
+import { User } from '../../types';
 
 interface AuthContextType {
-  user: any;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     // Check initial session
