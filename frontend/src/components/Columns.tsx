@@ -89,7 +89,6 @@ export const columns: ColumnDef<MockInterview>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const interview = row.original
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
