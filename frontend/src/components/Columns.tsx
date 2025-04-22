@@ -12,8 +12,7 @@ import { RowDialog } from "./shared/RowDialog"
 export const columns: ColumnDef<MockInterview>[] = [
   {
     accessorKey: "date_time",
-    minSize: 150,
-    maxSize: 150,
+    enableResizing: false,
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
