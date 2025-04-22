@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Navbar */}
       <header className="border-b">
-        <div className="w-full max-w-[2000px] mx-auto flex h-16 items-center px-4 sm:px-6">
+        <div className="w-full max-w-[2000px] mx-auto flex h-16 items-center px-10 sm:px-12">
           <h1 className="text-xl font-bold tracking-tight">Cracked</h1>
           <div className="ml-auto flex items-center space-x-4">
             <div className="text-sm text-muted-foreground">
@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 w-full max-w-[2000px] mx-auto py-6 px-4 sm:px-6">
+      <main className="flex-1 w-full max-w-[2000px] mx-auto py-6 px-10 sm:px-12">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold tracking-tight">Your Interview History</h2>
         </div>
