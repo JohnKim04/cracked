@@ -1,10 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { Button } from "./ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { MockInterview } from "../types"
+import { CellDialog } from "./shared/CellDialog"
+import { RowDialog } from "./shared/RowDialog"
 
 export const columns: ColumnDef<MockInterview>[] = [
   {
@@ -29,8 +32,29 @@ export const columns: ColumnDef<MockInterview>[] = [
       )
     },
     cell: ({ row }) => {
+      const [isOpen, setIsOpen] = useState(false)
       const code = row.getValue("code") as string
-      return <div className="font-mono text-xs bg-muted p-2 rounded-md overflow-x-auto w-full">{code}</div>
+      
+      return (
+        <>
+          <div 
+            className="font-mono text-xs bg-muted p-2 rounded-md overflow-hidden max-h-[200px] cursor-pointer hover:bg-muted/70"
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsOpen(true)
+            }}
+          >
+            {code}
+          </div>
+          <CellDialog
+            content={code}
+            title="Code"
+            type="code"
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+        </>
+      )
     },
   },
   {
@@ -59,11 +83,29 @@ export const columns: ColumnDef<MockInterview>[] = [
       )
     },
     cell: ({ row }) => {
+      const [isOpen, setIsOpen] = useState(false)
       const thought = row.getValue("thought_process") as string
+      
       return (
-        <div className="w-full truncate" title={thought}>
-          {thought}
-        </div>
+        <>
+          <div 
+            className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2" 
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsOpen(true)
+            }}
+            title="Click to expand"
+          >
+            {thought}
+          </div>
+          <CellDialog
+            content={thought}
+            title="Thought Process"
+            type="thought"
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+        </>
       )
     },
   },
@@ -78,32 +120,60 @@ export const columns: ColumnDef<MockInterview>[] = [
       )
     },
     cell: ({ row }) => {
+      const [isOpen, setIsOpen] = useState(false)
       const feedback = row.getValue("feedback") as string
+      
       return (
-        <div className="w-full truncate" title={feedback}>
-          {feedback}
-        </div>
+        <>
+          <div 
+            className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2"
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsOpen(true)
+            }}
+            title="Click to expand"
+          >
+            {feedback}
+          </div>
+          <CellDialog
+            content={feedback}
+            title="Feedback"
+            type="feedback"
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+        </>
       )
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
+      const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+      
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.id)}>
-              View Details
-            </DropdownMenuItem>
-            <DropdownMenuItem>Export Solution</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setIsDetailsOpen(true)}>
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuItem>Export Solution</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          <RowDialog
+            interview={row.original}
+            isOpen={isDetailsOpen}
+            onClose={() => setIsDetailsOpen(false)}
+          />
+        </>
       )
     },
   },
