@@ -3,7 +3,8 @@ export interface MockInterview {
   user_id: string;
   problem: string;
   code: string;
-  thought_process: string;
+  interview_transcript: string;
   feedback: string;
-  created_at: string;
+  date_time: string;
+  comments: string;
 }

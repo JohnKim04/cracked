@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 interface CellDialogProps {
   content: string
   title: string
-  type: 'code' | 'thought' | 'feedback'
+  type: 'code' | 'interview_transcript' | 'feedback'
   isOpen: boolean
   onClose: () => void
 }

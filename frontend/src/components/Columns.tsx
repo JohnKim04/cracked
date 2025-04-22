@@ -11,7 +11,32 @@ import { RowDialog } from "./shared/RowDialog"
 
 export const columns: ColumnDef<MockInterview>[] = [
   {
+    accessorKey: "date_time",
+    minSize: 150,
+    maxSize: 150,
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Date/Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("date_time") as string)
+      return (
+        <div className="flex flex-col">
+          <div className="font-medium">{date.toLocaleDateString()}</div>
+          <div className="text-xs text-muted-foreground">{date.toLocaleTimeString()}</div>
+        </div>
+      )
+    },
+  },
+  {
     accessorKey: "problem",
+    minSize: 135,
+    maxSize: 300,
+    enableResizing: true,
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -23,6 +48,9 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "code",
+    minSize: 100,
+    maxSize: 400,
+    enableResizing: true,
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -34,10 +62,10 @@ export const columns: ColumnDef<MockInterview>[] = [
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const code = row.getValue("code") as string
-      
+
       return (
         <>
-          <div 
+          <div
             className="font-mono text-xs bg-muted p-2 rounded-md overflow-hidden max-h-[200px] cursor-pointer hover:bg-muted/70"
             onClick={(e) => {
               e.stopPropagation()
@@ -58,38 +86,26 @@ export const columns: ColumnDef<MockInterview>[] = [
     },
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "interview_transcript",
+    minSize: 160,
+    maxSize: 400,
+    enableResizing: true,
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Created At
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("created_at") as string)
-      return <div>{date.toLocaleString()}</div>
-    },
-  },
-  {
-    accessorKey: "thought_process",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Thought Process
+          Interview Transcript
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
-      const thought = row.getValue("thought_process") as string
-      
+      const thought = row.getValue("interview_transcript") as string
+
       return (
         <>
-          <div 
-            className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2" 
+          <div
+            className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2"
             onClick={(e) => {
               e.stopPropagation()
               setIsOpen(true)
@@ -100,8 +116,8 @@ export const columns: ColumnDef<MockInterview>[] = [
           </div>
           <CellDialog
             content={thought}
-            title="Thought Process"
-            type="thought"
+            title="Interview Transcript"
+            type="interview_transcript"
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
           />
@@ -111,6 +127,9 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "feedback",
+    minSize: 90,
+    maxSize: 300,
+    enableResizing: true,
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -122,10 +141,10 @@ export const columns: ColumnDef<MockInterview>[] = [
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const feedback = row.getValue("feedback") as string
-      
+
       return (
         <>
-          <div 
+          <div
             className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2"
             onClick={(e) => {
               e.stopPropagation()
@@ -148,9 +167,11 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     id: "actions",
+    size: 100,
+    enableResizing: true,
     cell: ({ row }) => {
       const [isDetailsOpen, setIsDetailsOpen] = useState(false)
-      
+
       return (
         <>
           <DropdownMenu>
@@ -167,7 +188,7 @@ export const columns: ColumnDef<MockInterview>[] = [
               <DropdownMenuItem>Export Solution</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
+
           <RowDialog
             interview={row.original}
             isOpen={isDetailsOpen}

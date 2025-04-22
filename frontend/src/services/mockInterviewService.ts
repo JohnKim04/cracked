@@ -8,7 +8,7 @@ export async function getUserMockInterviews(userId: string): Promise<MockIntervi
       .from('mock_interviews')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .order('date_time', { ascending: false });
 
     if (error) {
       throw new ApiError(
@@ -31,7 +31,7 @@ export async function getUserMockInterviews(userId: string): Promise<MockIntervi
   }
 }
 
-export async function createMockInterview(interview: Omit<MockInterview, 'id' | 'created_at' | 'updated_at'>): Promise<MockInterview> {
+export async function createMockInterview(interview: Omit<MockInterview, 'id' | 'date_time' | 'updated_at'>): Promise<MockInterview> {
   try {
     const { data, error } = await supabase
       .from('mock_interviews')

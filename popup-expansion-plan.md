@@ -68,7 +68,7 @@ const handleCellClick = (e: React.MouseEvent, content: string, type: string) => 
       <CodeSection code={row.code} />
       <ThoughtSection thought={row.thought_process} />
       <FeedbackSection feedback={row.feedback} />
-      <DateSection date={row.created_at} />
+      <DateSection date={row.date_time} />
     </div>
   </DialogContent>
 </Dialog>

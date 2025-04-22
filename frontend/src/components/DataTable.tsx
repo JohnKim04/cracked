@@ -30,13 +30,15 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         state: {
             sorting,
         },
+        enableColumnResizing: true,
+        columnResizeMode: "onChange",
     })
 
     return (
         <div>
             <div className="rounded-md border">
                 <div className="w-full overflow-auto min-w-full">
-                    <table className="w-full caption-bottom text-sm table-fixed">
+                    <table className="w-full caption-bottom text-sm table-fixed relative [&_th]:border-r [&_td]:border-r last:[&_th]:border-r-0 last:[&_td]:border-r-0">
                         <thead className="[&_tr]:border-b">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr
@@ -47,9 +49,20 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                                         return (
                                             <th
                                                 key={header.id}
-                                                className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                                                className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 relative border-neutral-200"
+                                                style={{ width: header.getSize() }}
                                             >
                                                 {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                                {header.column.getCanResize() && (
+                                                    <div
+                                                        onMouseDown={header.getResizeHandler()}
+                                                        onTouchStart={header.getResizeHandler()}
+                                                        className={`absolute right-0 top-0 h-[100vh] w-1 cursor-col-resize select-none touch-none group ${
+                                                            header.column.getIsResizing() ? "bg-neutral-600" : ""
+                                                        }`}
+                                                    >
+                                                    </div>
+                                                )}
                                             </th>
                                         )
                                     })}
@@ -64,7 +77,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                                         className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                                            <td 
+                                                key={cell.id} 
+                                                className="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+                                                style={{ width: cell.column.getSize() }}
+                                            >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </td>
                                         ))}
