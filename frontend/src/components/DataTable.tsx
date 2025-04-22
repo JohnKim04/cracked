@@ -35,8 +35,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     return (
         <div>
             <div className="rounded-md border">
-                <div className="w-full overflow-auto">
-                    <table className="w-full caption-bottom text-sm">
+                <div className="w-full overflow-auto min-w-full">
+                    <table className="w-full caption-bottom text-sm table-fixed">
                         <thead className="[&_tr]:border-b">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr
@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 </div>
             </div>
             <div className="flex items-center justify-between space-x-2 py-4">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground pl-4">
                     Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
                     {Math.min(
                         (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
@@ -90,7 +90,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     )}{" "}
                     of {table.getFilteredRowModel().rows.length} entries
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 pr-4">
                     <button
                         className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
                         onClick={() => table.previousPage()}

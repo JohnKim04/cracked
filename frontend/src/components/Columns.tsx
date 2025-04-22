@@ -30,7 +30,7 @@ export const columns: ColumnDef<MockInterview>[] = [
     },
     cell: ({ row }) => {
       const code = row.getValue("code") as string
-      return <div className="font-mono text-xs bg-muted p-2 rounded-md overflow-x-auto max-w-[300px]">{code}</div>
+      return <div className="font-mono text-xs bg-muted p-2 rounded-md overflow-x-auto w-full">{code}</div>
     },
   },
   {
@@ -61,7 +61,7 @@ export const columns: ColumnDef<MockInterview>[] = [
     cell: ({ row }) => {
       const thought = row.getValue("thought_process") as string
       return (
-        <div className="max-w-[300px] truncate" title={thought}>
+        <div className="w-full truncate" title={thought}>
           {thought}
         </div>
       )
@@ -80,7 +80,7 @@ export const columns: ColumnDef<MockInterview>[] = [
     cell: ({ row }) => {
       const feedback = row.getValue("feedback") as string
       return (
-        <div className="max-w-[300px] truncate" title={feedback}>
+        <div className="w-full truncate" title={feedback}>
           {feedback}
         </div>
       )
