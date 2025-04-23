@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from './Auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../lib/supabaseClient';
 import { getUserMockInterviews } from '../services/mockInterviewService';
 import { Settings } from 'lucide-react';
 import { DataTable } from './DataTable';
@@ -29,11 +28,6 @@ const Dashboard: React.FC = () => {
       .finally(() => setLoading(false));
   }, [user, navigate]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
-  };
-
   if (!user) return null;
 
   return (
@@ -41,14 +35,14 @@ const Dashboard: React.FC = () => {
       {/* Navbar */}
       <header className="border-b">
         <div className="w-full max-w-[2000px] mx-auto flex h-16 items-center px-10 sm:px-12">
-          <h1 className="text-xl font-bold tracking-tight">Cracked</h1>
+          <h1 className="text-xl font-bold tracking-tight">cracked</h1>
           <div className="ml-auto flex items-center space-x-4">
             <div className="text-sm text-muted-foreground">
               Logged in as <span className="font-medium text-foreground">{user.email}</span>
             </div>
-            <Button variant="ghost" size="icon" onClick={handleSignOut}>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}>
               <Settings className="h-5 w-5" />
-              <span className="sr-only">Sign Out</span>
+              <span className="sr-only">Settings</span>
             </Button>
           </div>
         </div>

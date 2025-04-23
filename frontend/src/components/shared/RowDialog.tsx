@@ -36,9 +36,15 @@ export function RowDialog({ interview, isOpen, onClose }: RowDialogProps) {
             </div>
           </div>
           <div>
+            <h3 className="text-lg font-medium mb-2">Feedback</h3>
+            <div className="text-sm whitespace-pre-wrap">
+              {interview.comments}
+            </div>
+          </div>
+          <div>
             <h3 className="text-lg font-medium mb-2">Date/Time</h3>
             <div className="text-sm">
-              {new Date(interview.date_time).toLocaleString()}
+              {new Date(interview.date).toLocaleString()}
             </div>
           </div>
         </div>

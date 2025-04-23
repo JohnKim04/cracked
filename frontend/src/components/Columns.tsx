@@ -8,21 +8,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { MockInterview } from "../types"
 import { CellDialog } from "./shared/CellDialog"
 import { RowDialog } from "./shared/RowDialog"
+import { updateMockInterviewComments } from "../services/mockInterviewService"
 
 export const columns: ColumnDef<MockInterview>[] = [
   {
-    accessorKey: "date_time",
-    enableResizing: false,
+    accessorKey: "date",
+    meta: { width: 120 },
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Date/Time
+        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("date_time") as string)
+      const date = new Date(row.getValue("date") as string)
       return (
         <div className="flex flex-col">
           <div className="font-medium">{date.toLocaleDateString()}</div>
@@ -33,26 +34,30 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "problem",
-    minSize: 135,
-    maxSize: 300,
-    enableResizing: true,
+    meta: { width: 140 },
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Problem
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const problem = row.getValue("problem") as string
+      return (
+        <div className="min-h-[1rem] max-h-[6rem] overflow-hidden" title={problem}>
+          {problem}
+        </div>
+      )
+    }
   },
   {
     accessorKey: "code",
-    minSize: 100,
-    maxSize: 400,
-    enableResizing: true,
+    meta: { width: 160 },
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Code
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -65,11 +70,12 @@ export const columns: ColumnDef<MockInterview>[] = [
       return (
         <>
           <div
-            className="font-mono text-xs bg-muted p-2 rounded-md overflow-hidden max-h-[200px] cursor-pointer hover:bg-muted/70"
+            className="font-mono text-xs bg-muted p-2 rounded-md min-h-[1rem] max-h-[6rem] overflow-hidden cursor-pointer hover:bg-muted/70"
             onClick={(e) => {
               e.stopPropagation()
               setIsOpen(true)
             }}
+            title="Click to expand"
           >
             {code}
           </div>
@@ -86,12 +92,9 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "interview_transcript",
-    minSize: 160,
-    maxSize: 400,
-    enableResizing: true,
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Interview Transcript
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -99,22 +102,22 @@ export const columns: ColumnDef<MockInterview>[] = [
     },
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
-      const thought = row.getValue("interview_transcript") as string
+      const transcript = row.getValue("interview_transcript") as string
 
       return (
         <>
           <div
-            className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2"
+            className="min-h-[1rem] max-h-[6rem] overflow-hidden cursor-pointer hover:bg-muted/70 rounded-md p-2"
             onClick={(e) => {
               e.stopPropagation()
               setIsOpen(true)
             }}
             title="Click to expand"
           >
-            {thought}
+            {transcript}
           </div>
           <CellDialog
-            content={thought}
+            content={transcript}
             title="Interview Transcript"
             type="interview_transcript"
             isOpen={isOpen}
@@ -126,12 +129,9 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "feedback",
-    minSize: 90,
-    maxSize: 300,
-    enableResizing: true,
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Feedback
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -144,7 +144,7 @@ export const columns: ColumnDef<MockInterview>[] = [
       return (
         <>
           <div
-            className="w-full truncate cursor-pointer hover:bg-muted/70 rounded-md p-2"
+            className="min-h-[1rem] max-h-[6rem] overflow-hidden cursor-pointer hover:bg-muted/70 rounded-md p-2"
             onClick={(e) => {
               e.stopPropagation()
               setIsOpen(true)
@@ -165,9 +165,63 @@ export const columns: ColumnDef<MockInterview>[] = [
     },
   },
   {
+    accessorKey: "comments",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Comments
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const [isOpen, setIsOpen] = useState(false)
+      const [isLoading, setIsLoading] = useState(false)
+      const comments = row.getValue("comments") as string
+
+      const handleUpdate = async (newContent: string) => {
+        try {
+          setIsLoading(true)
+          await updateMockInterviewComments(row.original.id, newContent)
+          row.original.comments = newContent
+        } catch (error) {
+          console.error('Failed to update comments:', error)
+          // You might want to show an error toast here
+        } finally {
+          setIsLoading(false)
+          setIsOpen(false)
+        }
+      }
+
+      return (
+        <>
+          <div
+            className="min-h-[1rem] max-h-[6rem] overflow-hidden cursor-pointer hover:bg-muted/70 rounded-md p-2"
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsOpen(true)
+            }}
+            title="Click to expand"
+          >
+            {comments?.trim() || "No comments"}
+          </div>
+          <CellDialog
+            content={comments}
+            title="Comments"
+            type="comments"
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            onUpdate={handleUpdate}
+            editable={true}
+            isLoading={isLoading}
+          />
+        </>
+      )
+    },
+  },
+  {
     id: "actions",
-    size: 100,
-    enableResizing: true,
+    meta: { width: 65 },
     cell: ({ row }) => {
       const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
