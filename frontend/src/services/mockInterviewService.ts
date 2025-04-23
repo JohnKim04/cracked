@@ -8,7 +8,7 @@ export async function getUserMockInterviews(userId: string): Promise<MockIntervi
       .from('mock_interviews')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .order('date', { ascending: false });
 
     if (error) {
       throw new ApiError(
@@ -31,7 +31,7 @@ export async function getUserMockInterviews(userId: string): Promise<MockIntervi
   }
 }
 
-export async function createMockInterview(interview: Omit<MockInterview, 'id' | 'created_at' | 'updated_at'>): Promise<MockInterview> {
+export async function createMockInterview(interview: Omit<MockInterview, 'id' | 'date' | 'updated_at'>): Promise<MockInterview> {
   try {
     const { data, error } = await supabase
       .from('mock_interviews')
@@ -57,5 +57,27 @@ export async function createMockInterview(interview: Omit<MockInterview, 'id' | 
       throw error;
     }
     throw new ApiError('Failed to create mock interview', undefined, error);
+  }
+}
+
+export async function updateMockInterviewComments(interviewId: string, comments: string): Promise<void> {
+  try {
+    const { error } = await supabase
+      .from('mock_interviews')
+      .update({ comments })
+      .eq('id', interviewId);
+
+    if (error) {
+      throw new ApiError(
+        error.message,
+        error.code ? parseInt(error.code, 10) : undefined,
+        error
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError('Failed to update comments', undefined, error);
   }
 }
