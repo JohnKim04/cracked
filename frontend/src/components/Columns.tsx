@@ -16,8 +16,8 @@ export const columns: ColumnDef<MockInterview>[] = [
     meta: { width: 120 },
     header: ({ column }) => {
       return (
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="text-foreground hover:text-foreground w-full"
           onClick={(e) => {
             e.stopPropagation();
@@ -46,8 +46,8 @@ export const columns: ColumnDef<MockInterview>[] = [
     meta: { width: 140 },
     header: ({ column }) => {
       return (
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="text-foreground hover:text-foreground w-full"
           onClick={(e) => {
             e.stopPropagation();
@@ -167,13 +167,14 @@ export const columns: ColumnDef<MockInterview>[] = [
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const [isLoading, setIsLoading] = useState(false)
-      const comments = row.getValue("comments") as string
+      const [commentContent, setCommentContent] = useState(row.getValue("comments") as string)
 
       const handleUpdate = async (newContent: string) => {
         try {
           setIsLoading(true)
           await updateMockInterviewComments(row.original.id, newContent)
           row.original.comments = newContent
+          setCommentContent(newContent)
         } catch (error) {
           console.error('Failed to update comments:', error)
         } finally {
@@ -181,7 +182,6 @@ export const columns: ColumnDef<MockInterview>[] = [
           setIsOpen(false)
         }
       }
-
       return (
         <>
           <div
@@ -192,10 +192,10 @@ export const columns: ColumnDef<MockInterview>[] = [
             }}
             title="Click to expand"
           >
-            {comments?.trim() || "No comments"}
+            {commentContent?.trim() || "No comments"}
           </div>
           <CellDialog
-            content={comments}
+            content={commentContent}
             title="Comments"
             type="comments"
             isOpen={isOpen}
