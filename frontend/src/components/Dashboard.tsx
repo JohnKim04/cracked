@@ -87,6 +87,9 @@ const Dashboard: React.FC = () => {
             <a href="#" className="hover:underline">
               Help
             </a>
+            <a href="#" className="hover:underline">
+              About Us
+            </a>
           </div>
         </div>
       </footer>

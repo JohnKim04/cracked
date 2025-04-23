@@ -16,9 +16,18 @@ export const columns: ColumnDef<MockInterview>[] = [
     meta: { width: 120 },
     header: ({ column }) => {
       return (
-        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+        <Button 
+          variant="ghost" 
+          className="text-foreground hover:text-foreground w-full"
+          onClick={(e) => {
+            e.stopPropagation();
+            column.toggleSorting();
+          }}
+        >
+          <span className="flex items-center justify-center">
+            Date
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
         </Button>
       )
     },
@@ -37,9 +46,18 @@ export const columns: ColumnDef<MockInterview>[] = [
     meta: { width: 140 },
     header: ({ column }) => {
       return (
-        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Problem
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+        <Button 
+          variant="ghost" 
+          className="text-foreground hover:text-foreground w-full"
+          onClick={(e) => {
+            e.stopPropagation();
+            column.toggleSorting();
+          }}
+        >
+          <span className="flex items-center justify-center">
+            Problem
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
         </Button>
       )
     },
@@ -55,14 +73,7 @@ export const columns: ColumnDef<MockInterview>[] = [
   {
     accessorKey: "code",
     meta: { width: 160 },
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Code
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: () => <div className="text-center font-medium text-muted-foreground">Code</div>,
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const code = row.getValue("code") as string
@@ -92,14 +103,7 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "interview_transcript",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Interview Transcript
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: () => <div className="text-center font-medium text-muted-foreground">Interview Transcript</div>,
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const transcript = row.getValue("interview_transcript") as string
@@ -129,14 +133,7 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "feedback",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Feedback
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: () => <div className="text-center font-medium text-muted-foreground">Feedback</div>,
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const feedback = row.getValue("feedback") as string
@@ -166,14 +163,7 @@ export const columns: ColumnDef<MockInterview>[] = [
   },
   {
     accessorKey: "comments",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" className="text-foreground hover:text-foreground" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Comments
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: () => <div className="text-center font-medium text-muted-foreground">Comments</div>,
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false)
       const [isLoading, setIsLoading] = useState(false)
@@ -186,7 +176,6 @@ export const columns: ColumnDef<MockInterview>[] = [
           row.original.comments = newContent
         } catch (error) {
           console.error('Failed to update comments:', error)
-          // You might want to show an error toast here
         } finally {
           setIsLoading(false)
           setIsOpen(false)
