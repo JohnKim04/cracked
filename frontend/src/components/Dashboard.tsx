@@ -10,10 +10,10 @@ import { MockInterview } from '../types';
 import { useTheme } from './theme-provider';
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [mockInterviews, setMockInterviews] = useState<MockInterview[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { theme } = useTheme();
 
@@ -37,17 +37,23 @@ const Dashboard: React.FC = () => {
   }
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!user) {
       navigate('/login');
       return;
     }
-    setLoading(true);
+    setDataLoading(true);
     setError(null);
     getUserMockInterviews(user.id)
       .then(data => setMockInterviews(data))
       .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [user, navigate]);
+      .finally(() => setDataLoading(false));
+  }, [user, authLoading, navigate]);
+
+  if (authLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading auth...</div>;
+  }
 
   if (!user) return null;
 
@@ -83,11 +89,11 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Loading and Error States */}
-        {loading && <div className="text-center py-8">Loading your interviews...</div>}
+        {dataLoading && <div className="text-center py-8">Loading your interviews...</div>}
         {error && <div className="text-center py-8 text-destructive">{error}</div>}
 
         {/* Data Table */}
-        {!loading && !error && (
+        {!dataLoading && !error && (
           <div className="rounded-md border bg-card">
             {mockInterviews.length === 0 ? (
               <div className="text-center py-12">
