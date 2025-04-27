@@ -6,17 +6,22 @@
     "permissions": [
         "activeTab", 
         "scripting",
-        "storage"
+        "storage",
+        "identity",
+        "identity.email",
+        "cookies"
     ],
     "host_permissions": [
-        "https://leetcode.com/*"
+        "https://leetcode.com/*",
+        "https://dgifcyoknbuhdiorpvtv.supabase.co/*"
     ],
     "action": {
       "default_title": "Open Cracked Sidebar",
       "default_icon": "hello_extensions.png"
     },
     "background": {
-      "service_worker": "background.js"
+      "service_worker": "background.js",
+      "type": "module"
     },
     "content_scripts": [
       {

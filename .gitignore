@@ -13,6 +13,7 @@ frontend/dist/
 # Chrome Extension
 extension/dist/
 extension/*.pem
+extension/.env
 
 # OS
 .DS_Store
