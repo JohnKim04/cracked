@@ -10,7 +10,10 @@ const Login: React.FC = () => {
     setError(null);
     try {
       const { error: signInError } = await supabase.auth.signInWithOAuth({
-        provider: 'google'
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
     });
 
     if (signInError) {
