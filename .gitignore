@@ -14,8 +14,8 @@ frontend/dist/
 extension/dist/
 extension/*.pem
 extension/.env
+extension/node_modules
 
-# OS
 .DS_Store
 
 # General

@@ -13,7 +13,7 @@
     ],
     "host_permissions": [
         "https://leetcode.com/*",
-        "https://dgifcyoknbuhdiorpvtv.supabase.co/*"
+        "__SUPABASE_URL__/*"
     ],
     "action": {
       "default_title": "Open Cracked Sidebar",
